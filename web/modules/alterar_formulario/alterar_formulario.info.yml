@@ -1,0 +1,7 @@
+name: Alterar formulario
+description: Alterar formulario
+package: Nelson
+
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
