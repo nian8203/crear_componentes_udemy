@@ -1,0 +1,113 @@
+<?php
+
+
+function alterar_formulario_form_alter(&$form, &$form_state, $form_id)
+{
+    
+    if($form_id == 'node-article-edit-form'){ //se usa para que apliquen estos cambios solamnete al id de este modulo
+
+    
+
+
+        ksm($form);
+        ksm($form_state);
+        dpm($form_id);
+
+        // //se agrega la ruta del placeholder en extendes del modulo creado
+        // $form['field_celular']['widget'][0]['value']['#placeholder'] = "Digite su celular"; 
+        // //modificacion clase input celular
+        // $form['field_celular']['widget'][0]['value']['#attributes']['class'][] = "nueva-clase"; 
+        // $form['field_celular']['widget'][0]['value']['#attributes']['style'][] = "background-color:blue"; 
+        // $form['field_celular']['widget'][0]['value']['#description'] = "Debe completar este campo"; 
+        // $form['field_celular']['widget'][0]['value']['#required'] = true;
+
+
+        //creacion contenedor type = fieldset
+        $form['fieldset_datos_producto'] = array(
+            '#type' => 'fieldset',
+            '#title' => t('Datos del articulo'), //eliminar this
+        );
+
+        //crear campos en el contenedor
+        $form['fieldset_datos_producto']['body'] = $form['body'];
+        $form['fieldset_datos_producto']['title'] = $form['title'];
+
+        //ocultar campos
+        hide($form['body']);
+        hide($form['title']);
+
+
+        $form['Vendedor'] = array(
+            '#type' => 'details',
+            '#title' => t('Vendedor'),
+            '#open' => true,
+        );
+
+
+        //crear nuevo input text en contenedor vendedor e igualarlo qon el que existe
+        $form['Vendedor']['field_nombre_y_apellido_anuncian'] = $form['field_nombre_y_apellido_anuncian'];
+        $form['Vendedor']['field_correo_anunciante'] = $form['field_correo_anunciante'];
+        $form['Vendedor']['field_celular'] = $form['field_celular'];
+
+
+        hide($form['field_nombre_y_apellido_anuncian']);
+        hide($form['field_celular']);
+        hide($form['field_correo_anunciante']);
+
+
+        //==============vertical tabs====================
+        $form['information'] = array(
+            '#type' => 'vertical_tabs',
+            '#default_tab' => 'edit-publication',
+            '#title' => t('Información'),
+        );
+        // //================================================
+
+        $form['details_grupo1'] = array(
+            '#type' => 'details',
+            '#title' => t('Grupo 1'),
+            '#group' => 'information',
+        );
+
+        //crear nuevo input text en contenedor vendedor e igualarlo qon el que existe
+        $form['details_grupo1']['field_tags'] = $form['field_tags'];
+        $form['details_grupo1']['field_image'] = $form['field_image'];
+
+
+        $form['details_grupo2'] = array(
+            '#type' => 'details',
+            '#title' => t('Grupo 2'),
+            '#group' => 'information', //se  agrega para usar vertical tab con el nombre de  $form['information'] 
+        );
+
+        //crear nuevo input text en contenedor vendedor e igualarlo qon el que existe
+        $form['details_grupo2']['field_paquetes'] = $form['field_paquetes'];
+        $form['details_grupo2']['field_precio'] = $form['field_precio'];
+
+        hide($form['field_tags']);
+        hide($form['field_image']);
+        hide($form['field_paquetes']);
+        hide($form['field_precio']);
+
+
+
+        //===================CREAR BOTON Y CAMBIAR SUBMIT===============
+        $form['actions']['submit_cancelar'] = array(
+            '#type' => 'submit',
+            '#value' => t('Cancelar'),
+            '#submit' => array('cancelar_ok'), //se agrega para modificar el submit de un boton
+            '#weight' => 10,
+        );
+    } //end if
+}
+
+
+use Symfony\Component\HttpFoundation\RedirectResponse; //add para hacer redireccion
+//tomado de: https://drupal.stackexchange.com/questions/138697/what-function-method-can-i-use-to-redirect-users-to-a-different-page
+
+function cancelar_ok()
+{
+    Drupal::messenger()->addMessage("Operacion cancelada");
+    $response = new RedirectResponse(\Drupal::url('<front>')); //redireccionamiento a la pagina principal =<front>
+    $response->send();
+}

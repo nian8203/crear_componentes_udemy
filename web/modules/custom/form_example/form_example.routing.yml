@@ -1,0 +1,21 @@
+form_example.addform: #crear modulo . que va a hacer el moduolo puede ser cualquier nombre
+    path: '/form_example/addform'
+    defaults:
+        _form: '\Drupal\form_example\Form\addform' 
+        _title: 'Add Form'
+    requirements:    
+        _permission : 'access content'
+
+# add -> Drupal\form_example\Form al namespace 
+# add -> addform al nombre de la clase
+
+ #============documantation==================
+# https://www.drupal.org/docs/drupal-apis/routing-system/structure-of-routes
+
+#  module_name.route_machine_name:
+#     path: '/{module_name}/personal-info'
+#     defaults:
+#         _form: 'Drupal\{module_name}\Form\InfoForm'
+#         _title: 'Personal information'
+#     requirements:    
+#         _permission : 'custom_module_permission'
